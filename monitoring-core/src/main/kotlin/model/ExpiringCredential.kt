@@ -5,6 +5,6 @@ import java.util.Date
 
 class ExpiringCredential (
     override val name: String,
-    override val tags: Collection<ImmutableTag>,
-    override val expirationDate: Date?
+    override val expirationDate: Date?,
+    override val tags: Collection<ImmutableTag> = emptyList(),
 ) : ExpiringArtifact

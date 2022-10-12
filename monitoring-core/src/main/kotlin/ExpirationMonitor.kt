@@ -7,7 +7,8 @@ import org.slf4j.LoggerFactory
 
 class ExpirationMonitor(
     private val clock: Clock,
-    private val registry: MeterRegistry
+    private val registry: MeterRegistry,
+    private val globalTags: Collection<ImmutableTag> = emptyList(),
 ) {
 
     fun monitorExpiringArtifact(expiringArtifact: ExpiringArtifact) {
@@ -15,7 +16,7 @@ class ExpirationMonitor(
 
         registry.gauge(
             EXPIRATION_MONITORING_METRIC_NAME,
-            listOf(ImmutableTag(ARTIFACT_NAME_TAG, expiringArtifact.name)) + expiringArtifact.tags,
+            listOf(ImmutableTag(ARTIFACT_NAME_TAG, expiringArtifact.name)) + expiringArtifact.tags + globalTags,
             expiringArtifact
         ) { calculateRemainingTimeInMs(it) }
     }
@@ -28,6 +29,6 @@ class ExpirationMonitor(
     companion object {
         private val logger = LoggerFactory.getLogger(ExpirationMonitor::class.java)
         const val EXPIRATION_MONITORING_METRIC_NAME = "artifact.expiration"
-        const val ARTIFACT_NAME_TAG = "name"
+        const val ARTIFACT_NAME_TAG = "artifact.name"
     }
 }

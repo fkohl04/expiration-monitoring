@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 class ExpiringX509Certificate(
     override val name: String,
     override val expirationDate: Date?,
-    override val tags: Collection<ImmutableTag>,
+    override val tags: Collection<ImmutableTag> = emptyList(),
 ): ExpiringArtifact {
 
     companion object {
