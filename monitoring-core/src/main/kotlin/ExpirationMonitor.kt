@@ -1,5 +1,6 @@
 import io.micrometer.core.instrument.ImmutableTag
 import io.micrometer.core.instrument.MeterRegistry
+import java.lang.Double.max
 import java.time.Clock
 import java.util.Date
 import model.ExpiringArtifact
@@ -23,7 +24,7 @@ class ExpirationMonitor(
 
     private fun calculateRemainingTimeInMs(expiringArtifact: ExpiringArtifact) =
         expiringArtifact.expirationDate?.let { dateOfExpiry ->
-            (dateOfExpiry.time - Date.from(clock.instant()).time).toDouble()
+            max((dateOfExpiry.time - Date.from(clock.instant()).time).toDouble(), 0.0)
         } ?: 0.0
 
     companion object {
