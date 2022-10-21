@@ -22,6 +22,9 @@ dependencies {
     testImplementation("io.strikt:strikt-core:0.34.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
+    // cryptography
+    testImplementation("org.bouncycastle:bcprov-jdk15on:1.70")
+    testImplementation("org.bouncycastle:bcpkix-jdk15on:1.70")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
