@@ -1,5 +1,6 @@
 rootProject.name = "expiration-monitoring"
 
 include(
-    "monitoring-core"
+    "monitoring-core",
+    "ktor-example"
 )
