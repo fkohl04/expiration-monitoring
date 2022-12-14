@@ -1,6 +1,7 @@
 rootProject.name = "expiration-monitoring"
 
 include(
-    "monitoring-core",
-    "ktor-example"
+    "expiration-monitoring-core",
+    "expiration-monitoring-spring",
+    "example-applications:ktor-example"
 )

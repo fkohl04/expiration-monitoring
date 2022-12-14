@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":monitoring-core"))
+    implementation(project(":expiration-monitoring-core"))
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-metrics-micrometer-jvm:$ktor_version")
