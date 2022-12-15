@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.io.File
 import java.util.Date
 
-@ConfigurationProperties(value = "library-tls-tools.certificate-monitoring")
+@ConfigurationProperties(value = "expiration.monitoring")
 class ExpirationMonitoringProperties(
     val credentials: List<ExpiringCredentialProperties>?,
     val pkcs12Stores: List<ExpiringPkcs12Properties>?,

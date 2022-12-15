@@ -24,14 +24,16 @@ class ExpirationMonitor(
     }
 
     /**
-     * Use this method if the expiring artifact is not initialized.
+     * Use this method if the expiring artifact is not initialized and it is possible that an error occurs during
+     * initialization. If an error occurs during execution of the receiver function, it will be catched and the
+     * corresponding artifact will be displayed as expired in the service metrics.
      *
      * The second parameter needs to be a receiver to catch exceptions that may occur during initialization of the artifact.
      */
-    fun receiveAndMonitorArtifact(name: String, getExpiringArtifact: () -> ExpiringArtifact) =
+    fun receiveArtifactSafelyAndMonitor(name: String, getExpiringArtifact: () -> ExpiringArtifact) =
         executeOrMarkArtifactAsExpired(name) { monitorExpiringArtifact(getExpiringArtifact()) }
 
-    fun receiveAndMonitorArtifacts(name: String, getExpiringArtifacts: () -> Collection<ExpiringArtifact>) =
+    fun receiveArtifactsSafelyAndMonitor(name: String, getExpiringArtifacts: () -> Collection<ExpiringArtifact>) =
         executeOrMarkArtifactAsExpired(name) {
             getExpiringArtifacts().map { monitorExpiringArtifact(it) }
         }

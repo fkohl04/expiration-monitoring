@@ -30,7 +30,7 @@ open class CertificateValidityMonitoringConfiguration {
      * the certificate as expired.
      */
     @Bean
-    open fun certificateValidityMonitor(
+    open fun expirationMonitor(
         clock: Clock,
         registry: MeterRegistry?,
         expirationMonitoringProperties: ExpirationMonitoringProperties?
@@ -54,7 +54,7 @@ open class CertificateValidityMonitoringConfiguration {
         credentials: List<ExpiringCredentialProperties>?
     ) {
         credentials?.forEach { properties ->
-            receiveAndMonitorArtifact(properties.name) {
+            receiveArtifactSafelyAndMonitor(properties.name) {
                 ExpiringCredential(properties.name, properties.expirationDate)
             }
         }
@@ -64,7 +64,7 @@ open class CertificateValidityMonitoringConfiguration {
         certificates: List<ExpiringX509CertificateProperties>?
     ) {
         certificates?.forEach { properties ->
-            receiveAndMonitorArtifact(properties.name) {
+            receiveArtifactSafelyAndMonitor(properties.name) {
                 ExpiringX509Certificate(properties.name, properties.location)
             }
         }
@@ -74,7 +74,7 @@ open class CertificateValidityMonitoringConfiguration {
         plaintextX509Certificates: List<ExpiringPlaintextX509CertificateProperties>?
     ) {
         plaintextX509Certificates?.forEach { properties ->
-            receiveAndMonitorArtifact(properties.name) {
+            receiveArtifactSafelyAndMonitor(properties.name) {
                 ExpiringX509Certificate(properties.name, properties.content)
             }
         }
@@ -82,7 +82,7 @@ open class CertificateValidityMonitoringConfiguration {
 
     private fun ExpirationMonitor.monitorPKCS12Stores(stores: List<ExpiringPkcs12Properties>?) {
         stores?.forEach { properties ->
-            receiveAndMonitorArtifacts(properties.name) {
+            receiveArtifactsSafelyAndMonitor(properties.name) {
                 ExpiringPkcs12(properties.name, properties.location, properties.password)
                     .expiringCertificates
             }
