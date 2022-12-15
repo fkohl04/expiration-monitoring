@@ -13,6 +13,12 @@ class ExpirationMonitor(
     private val globalTags: Collection<ImmutableTag> = emptyList(),
 ) {
 
+    /**
+     * To make sure, that the monitored artifacts are not deleted by the garbage collector, which would result in wrong
+     * metrics, a reference is saved in the following list.
+     */
+    private val monitoredArtifacts = mutableListOf<ExpiringArtifact>()
+
     fun monitorExpiringArtifact(expiringArtifact: ExpiringArtifact) {
         logger.info("Monitoring expiration date of ${expiringArtifact.name}")
 
@@ -21,6 +27,9 @@ class ExpirationMonitor(
             listOf(ImmutableTag(ARTIFACT_NAME_TAG, expiringArtifact.name)) + expiringArtifact.tags + globalTags,
             expiringArtifact
         ) { calculateRemainingTimeInMs(it) }
+
+        // Save reference to the monitored artifact to prevent garbage collection
+        monitoredArtifacts.add(expiringArtifact)
     }
 
     fun monitorExpiringArtifacts(expiringArtifacts: Collection<ExpiringArtifact>) =

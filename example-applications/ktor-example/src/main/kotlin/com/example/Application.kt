@@ -1,11 +1,14 @@
 package com.example
 
 import ExpirationMonitor
-import io.ktor.server.application.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.application.install
 import io.ktor.server.metrics.micrometer.MicrometerMetrics
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
+import io.micrometer.core.instrument.ImmutableTag
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import java.io.File
@@ -23,12 +26,6 @@ fun main(args: Array<String>): Unit =
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
     val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
-    val expirationMonitor = ExpirationMonitor(StaticVariables.CLOCK, appMicrometerRegistry)
-
-    expirationMonitor.monitorExpiringArtifact(StaticVariables.EXPIRING_CREDENTIAL)
-    expirationMonitor.monitorExpiringArtifact(StaticVariables.X509)
-    expirationMonitor.monitorExpiringArtifact(StaticVariables.PLAINTEXT_X509)
-    expirationMonitor.monitorExpiringArtifacts(StaticVariables.P12.expiringCertificates)
 
     install(MicrometerMetrics) {
         registry = appMicrometerRegistry
@@ -39,26 +36,40 @@ fun Application.module() {
             call.respond(appMicrometerRegistry.scrape())
         }
     }
+
+    createAndMonitorExpiringArtifacts(appMicrometerRegistry)
 }
 
-object StaticVariables {
-    val CLOCK: Clock = Clock.systemUTC()
-    val EXPIRING_CREDENTIAL = ExpiringCredential(
-        "SomeExpiringCredential",
-        Date.from(Instant.now(CLOCK).plus(5, ChronoUnit.DAYS))
+private fun createAndMonitorExpiringArtifacts(prometheusMeterRegistry: PrometheusMeterRegistry) {
+    val clock: Clock = Clock.systemUTC()
+    val expirationMonitor = ExpirationMonitor(
+        clock,
+        prometheusMeterRegistry,
+        listOf(ImmutableTag("service", "ktor-example"))
     )
-    val X509 = ExpiringX509Certificate(
-        name = "SomeX509",
-        File(ClassLoader.getSystemResource("x509Certificate.crt").file)
-    )
-    val P12 = ExpiringPkcs12(
-        name = "SomeP12",
-        File(ClassLoader.getSystemResource("keystore.pfx").file),
-        ""
-    )
-    val PLAINTEXT_X509 = ExpiringX509Certificate(
-        name = "SomePlaintextX509",
-        content = """
+
+    "SomeExpiringCredential".let {
+        expirationMonitor.receiveArtifactSafelyAndMonitor(it) {
+            ExpiringCredential(it, Date.from(Instant.now(clock).plus(5, ChronoUnit.DAYS)))
+        }
+    }
+    "SomeX509".let {
+        expirationMonitor.receiveArtifactSafelyAndMonitor(it) {
+            ExpiringX509Certificate(it, File(ClassLoader.getSystemResource("x509Certificate.crt").file))
+        }
+    }
+    "SomeP12".let {
+        expirationMonitor.receiveArtifactsSafelyAndMonitor(it) {
+            ExpiringPkcs12(
+                it, File(ClassLoader.getSystemResource("keystore.pfx").file), ""
+            ).expiringCertificates
+        }
+    }
+    "SomePlaintextX509".let {
+        expirationMonitor.receiveArtifactSafelyAndMonitor(it) {
+            ExpiringX509Certificate(
+                name = it,
+                content = """
             -----BEGIN CERTIFICATE-----
             MIICljCCAX4CCQDERzAAFiDvTzANBgkqhkiG9w0BAQsFADANMQswCQYDVQQGEwJE
             RTAeFw0yMjEyMTUxMzQyNDVaFw0yMzEyMTUxMzQyNDVaMA0xCzAJBgNVBAYTAkRF
@@ -76,6 +87,7 @@ object StaticVariables {
             pSlM6plWfqPtMOhtn0e9/heckN6LjrHUSpEKIrEPvzcKrk4X1j6zD8lX
             -----END CERTIFICATE-----
             """.trimIndent()
-    )
-
+            )
+        }
+    }
 }

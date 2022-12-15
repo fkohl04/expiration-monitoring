@@ -40,7 +40,11 @@ open class CertificateValidityMonitoringConfiguration {
             return null
         }
 
-        val certificateValidityMonitor = ExpirationMonitor(clock, registry)
+        val certificateValidityMonitor = ExpirationMonitor(
+            clock,
+            registry,
+            expirationMonitoringProperties.globalTags ?: emptyList()
+        )
 
         certificateValidityMonitor.monitorCredentials(expirationMonitoringProperties.credentials)
         certificateValidityMonitor.monitorX509Certificates(expirationMonitoringProperties.x509Certificates)
