@@ -23,6 +23,9 @@ class ExpirationMonitor(
         ) { calculateRemainingTimeInMs(it) }
     }
 
+    fun monitorExpiringArtifacts(expiringArtifacts: Collection<ExpiringArtifact>) =
+        expiringArtifacts.forEach { monitorExpiringArtifact(it) }
+
     /**
      * Use this method if the expiring artifact is not initialized and it is possible that an error occurs during
      * initialization. If an error occurs during execution of the receiver function, it will be catched and the

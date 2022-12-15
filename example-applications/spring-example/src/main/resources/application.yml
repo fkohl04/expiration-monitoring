@@ -5,6 +5,9 @@ expiration.monitoring:
   x509Certificates:
     - name: "X509 certificate"
       location: "classpath:x509Certificate.crt"
+  pkcs12Stores:
+    - name: "p12 keystore"
+      location: "classpath:keystore.pfx"
   plaintextX509Certificates:
     - name: "plaintext X509 certificate"
       content: |
