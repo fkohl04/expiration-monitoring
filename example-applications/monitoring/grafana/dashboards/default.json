@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 2,
-  "iteration": 1672958903521,
+  "iteration": 1672958903523,
   "links": [],
   "panels": [
     {
@@ -84,7 +84,7 @@
       "repeatDirection": "v",
       "scopedVars": {
         "service": {
-          "selected": true,
+          "selected": false,
           "text": "ktor-example",
           "value": "ktor-example"
         }
@@ -92,14 +92,14 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "artifact_expiration",
+          "expr": "artifact_expiration{service=~\"$service\"}",
           "interval": "",
           "legendFormat": "{{artifact_name}}",
           "queryType": "randomWalk",
           "refId": "A"
         }
       ],
-      "title": "Artifact expiration {{test2}}",
+      "title": "Artifact expiration $service",
       "transparent": true,
       "type": "gauge"
     }
@@ -113,11 +113,12 @@
         "allValue": null,
         "current": {
           "selected": true,
+          "tags": [],
           "text": [
-            "ktor-example"
+            "All"
           ],
           "value": [
-            "ktor-example"
+            "$__all"
           ]
         },
         "datasource": "Prometheus",
@@ -154,5 +155,5 @@
   "timezone": "",
   "title": "Expiration Monitoring",
   "uid": "w7OVlMhVz",
-  "version": 1
+  "version": 2
 }
