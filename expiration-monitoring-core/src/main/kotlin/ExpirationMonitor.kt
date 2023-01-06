@@ -40,7 +40,8 @@ class ExpirationMonitor(
      * initialization. If an error occurs during execution of the receiver function, it will be catched and the
      * corresponding artifact will be displayed as expired in the service metrics.
      *
-     * The second parameter needs to be a receiver to catch exceptions that may occur during initialization of the artifact.
+     * The second parameter needs to be a receiver to catch exceptions that may occur during initialization of the
+     * artifact.
      */
     fun receiveArtifactSafelyAndMonitor(name: String, getExpiringArtifact: () -> ExpiringArtifact) =
         executeOrMarkArtifactAsExpired(name) { monitorExpiringArtifact(getExpiringArtifact()) }
@@ -64,7 +65,7 @@ class ExpirationMonitor(
         runCatching { executable() }
             .getOrElse {
                 logger.warn("Exception while trying to monitor $name.", it)
-                monitorExpiringArtifact(ExpiredArtifact("$name substitute"))
+                monitorExpiringArtifact(ExpiredArtifact("Parsing error: $name"))
             }
 
     companion object {
