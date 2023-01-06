@@ -13,6 +13,7 @@ import io.micrometer.core.instrument.ImmutableTag
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import java.io.File
+import java.io.FileNotFoundException
 import java.time.Clock
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -57,6 +58,11 @@ private fun createAndMonitorExpiringArtifacts(
             ExpiringCredential(it, Date.from(Instant.now(clock).plus(5, ChronoUnit.DAYS)))
         }
     }
+    "AnotherExpiringCredential".let {
+        expirationMonitor.receiveArtifactSafelyAndMonitor(it) {
+            ExpiringCredential(it, Date.from(Instant.now(clock).plus(35, ChronoUnit.DAYS)))
+        }
+    }
     "SomeX509".let {
         expirationMonitor.receiveArtifactSafelyAndMonitor(it) {
             ExpiringX509Certificate(it, File(environment.config.property("expiration.monitoring.x509.location").getString()))
@@ -92,6 +98,11 @@ private fun createAndMonitorExpiringArtifacts(
             -----END CERTIFICATE-----
             """.trimIndent()
             )
+        }
+    }
+    "SomeCredentialThatCanNotBeParsed".let {
+        expirationMonitor.receiveArtifactSafelyAndMonitor(it) {
+            throw FileNotFoundException("This exception was thrown for testing purpose.")
         }
     }
 }
