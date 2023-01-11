@@ -3,8 +3,8 @@ import io.micrometer.core.instrument.MeterRegistry
 import java.lang.Double.max
 import java.time.Clock
 import java.util.Date
-import model.ExpiredArtifact
 import model.ExpiringArtifact
+import model.NotParsableArtifact
 import org.slf4j.LoggerFactory
 
 class ExpirationMonitor(
@@ -59,13 +59,13 @@ class ExpirationMonitor(
     /**
      * If an exception occurs during configuration of the monitoring this should be as visible as possible. This method
      * can be used to safely initialize an artifact monitoring. In case of an exception the artifact will be marked as
-     * expired in the service metrics.
+     * expired in the service metrics. See NotParsableArtifact for further information.
      */
     private fun executeOrMarkArtifactAsExpired(name: String, executable: () -> Unit): Unit =
         runCatching { executable() }
             .getOrElse {
                 logger.warn("Exception while trying to monitor $name.", it)
-                monitorExpiringArtifact(ExpiredArtifact("Parsing error: $name"))
+                monitorExpiringArtifact(NotParsableArtifact(name))
             }
 
     companion object {

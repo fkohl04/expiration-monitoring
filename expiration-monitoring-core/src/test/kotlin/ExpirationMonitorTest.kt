@@ -109,7 +109,7 @@ internal class ExpirationMonitorTest {
     }
 
     companion object {
-        @JvmStatic
+        @JvmStatic // used as method source
         fun differenceToCurrentTimeToRemainingValidityInMs(): Stream<Arguments?>? {
             return Stream.of(
                 arguments(Integer.MIN_VALUE, 0),
