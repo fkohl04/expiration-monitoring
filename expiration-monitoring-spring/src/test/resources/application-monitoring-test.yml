@@ -1,24 +1,24 @@
-spring:
-  main:
-    banner-mode: off
-
-management.endpoints.web.exposure.include: health,info,prometheus
+# These properties are used in CertificateValidityMonitoringConfigurationTest
 
 expiration.monitoring:
   globalTags:
     - key: "service"
-      value: "example-spring"
+      value: "test-service"
   credentials:
     - name: "test credential"
       expirationDate: "Sat, 12 Aug 1995 13:30:00 GMT"
   x509Certificates:
-    - name: "X509 certificate"
-      location: ${X509_LOCATION:classpath:x509Certificate.crt}
+    - name: "test X509 certificate"
+      location: "classpath:x509Certificate.crt"
+    - name: "Not parsable X509 certificate"
+      location: "classpath:application-monitoring-test.yml" # Choosing on purpose a not parsable file
   pkcs12Stores:
-    - name: "p12 keystore"
-      location: ${PKCS12_LOCATION:classpath:keystore.pfx}
+    - name: "test p12 keystore"
+      location: "classpath:keystore.pfx"
+    - name: "Not parsable p12 keystore"
+      location: "classpath:application-monitoring-test.yml" # Choosing on purpose a not parsable file
   plaintextX509Certificates:
-    - name: "plaintext X509 certificate"
+    - name: "test plaintext X509 certificate"
       content: |
         -----BEGIN CERTIFICATE-----
         MIICljCCAX4CCQDERzAAFiDvTzANBgkqhkiG9w0BAQsFADANMQswCQYDVQQGEwJE
@@ -36,3 +36,6 @@ expiration.monitoring:
         8pnO+DFKboH4L9yfsrpX5ZweC06hvCm3qOGp2wW7mXrTfSeCUOCJRUIDLNBAp0+2
         pSlM6plWfqPtMOhtn0e9/heckN6LjrHUSpEKIrEPvzcKrk4X1j6zD8lX
         -----END CERTIFICATE-----
+    - name: "Not parsable plaintext X509 certificate"
+      content: |
+        This is not a parsable x509 certificate

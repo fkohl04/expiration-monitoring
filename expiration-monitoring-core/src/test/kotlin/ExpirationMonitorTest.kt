@@ -1,3 +1,4 @@
+import exception.ArtifactParsingException
 import io.micrometer.core.instrument.ImmutableTag
 import io.micrometer.core.instrument.MeterRegistry
 import io.mockk.every
@@ -11,6 +12,8 @@ import java.util.Date
 import java.util.function.ToDoubleFunction
 import java.util.stream.Stream
 import model.ExpiringArtifact
+import model.NotParsableArtifact
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -28,88 +31,127 @@ internal class ExpirationMonitorTest {
 
     private val artifactName = "someArtifactName"
 
-    @Test
-    fun `Given expiring artifact, When artifact is monitored, then meter registry is called with proper values`() {
-        val expiringArtifact = mockk<ExpiringArtifact>(relaxed = true)
-        every { expiringArtifact.name } returns artifactName
+    @Nested
+    inner class MonitorExpiringArtifactTests {
+        @Test
+        fun `Given expiring artifact, When artifact is monitored, then meter registry is called with proper values`() {
+            val expiringArtifact = mockk<ExpiringArtifact>(relaxed = true)
+            every { expiringArtifact.name } returns artifactName
 
-        uut.monitorExpiringArtifact(expiringArtifact)
+            uut.monitorExpiringArtifact(expiringArtifact)
 
-        verify {
-            registry.gauge(
-                "artifact.expiration",
-                listOf(ImmutableTag("artifact.name", artifactName)),
-                expiringArtifact,
-                any()
+            verify {
+                registry.gauge(
+                    "artifact.expiration",
+                    listOf(ImmutableTag("artifact.name", artifactName)),
+                    expiringArtifact,
+                    any()
+                )
+            }
+        }
+
+        @Test
+        fun `Given expiring artifact with additional tags, When artifact is monitored, then meter registry is called with proper values and additional tags`() {
+            val artifactsTags = listOf(
+                ImmutableTag("additionalTag1Key", "additionalTag1Value"),
+                ImmutableTag("additionalTag2Key", "additionalTag2Value")
             )
+            val expiringArtifact = mockk<ExpiringArtifact>(relaxed = true)
+            every { expiringArtifact.name } returns artifactName
+            every { expiringArtifact.tags } returns artifactsTags
+
+            uut.monitorExpiringArtifact(expiringArtifact)
+
+            verify {
+                registry.gauge(
+                    "artifact.expiration",
+                    listOf(ImmutableTag("artifact.name", artifactName)) + artifactsTags,
+                    expiringArtifact,
+                    any()
+                )
+            }
+        }
+
+        @Test
+        fun `Given expiration monitor with global tags, When an artifact is monitored, then meter registry is called with proper values and global tags`() {
+            val globalTags = listOf(
+                ImmutableTag("additionalGlobalTag1Key", "additionalGlobalTag1Value"),
+                ImmutableTag("additionalGlobalTag2Key", "additionalGlobalTag2Value")
+            )
+            val monitorWithGlobalTags = ExpirationMonitor(clock, registry, globalTags)
+            val expiringArtifact = mockk<ExpiringArtifact>(relaxed = true)
+            every { expiringArtifact.name } returns artifactName
+
+            monitorWithGlobalTags.monitorExpiringArtifact(expiringArtifact)
+
+            verify {
+                registry.gauge(
+                    "artifact.expiration",
+                    listOf(ImmutableTag("artifact.name", artifactName)) + globalTags,
+                    expiringArtifact,
+                    any()
+                )
+            }
+        }
+
+        @ParameterizedTest
+        @MethodSource("ExpirationMonitorTest#differenceToCurrentTimeToRemainingValidityInMs")
+        fun `Given expiring artifact, When artifact is monitored, then remaining validity has expected size`(
+            differenceToCurrentTime: Long,
+            expectedRemainingValidity: Long
+        ) {
+            val slot = slot<ToDoubleFunction<ExpiringArtifact>>()
+            val expiringArtifact = mockk<ExpiringArtifact>(relaxed = true)
+            every { expiringArtifact.name } returns artifactName
+            every { expiringArtifact.expirationDate } returns
+                    Date.from(Instant.ofEpochMilli(fixedEpochMillis + differenceToCurrentTime))
+            every { registry.gauge("artifact.expiration", any(), expiringArtifact, capture(slot)) } returns
+                    expiringArtifact
+
+            uut.monitorExpiringArtifact(expiringArtifact)
+
+            expectThat(slot.captured.applyAsDouble(expiringArtifact)).isEqualTo(expectedRemainingValidity.toDouble())
         }
     }
 
-    @Test
-    fun `Given expiring artifact with additional tags, When artifact is monitored, then meter registry is called with proper values and additional tags`() {
-        val artifactsTags = listOf(
-            ImmutableTag("additionalTag1Key", "additionalTag1Value"),
-            ImmutableTag("additionalTag2Key", "additionalTag2Value")
-        )
-        val expiringArtifact = mockk<ExpiringArtifact>(relaxed = true)
-        every { expiringArtifact.name } returns artifactName
-        every { expiringArtifact.tags } returns artifactsTags
+    @Nested
+    inner class ReceiveArtifactSafelyAndMonitorTests {
 
-        uut.monitorExpiringArtifact(expiringArtifact)
+        @Test
+        fun `Given expiring artifact, When artifact is safely received and monitored, then meter registry is called with proper values`() {
+            val expiringArtifact = mockk<ExpiringArtifact>(relaxed = true)
+            every { expiringArtifact.name } returns artifactName
 
-        verify {
-            registry.gauge(
-                "artifact.expiration",
-                listOf(ImmutableTag("artifact.name", artifactName)) + artifactsTags,
-                expiringArtifact,
-                any()
-            )
+            uut.receiveArtifactSafelyAndMonitor(expiringArtifact.name) {expiringArtifact}
+
+            verify {
+                registry.gauge(
+                    "artifact.expiration",
+                    listOf(ImmutableTag("artifact.name", artifactName)),
+                    expiringArtifact,
+                    any()
+                )
+            }
         }
-    }
 
-    @Test
-    fun `Given expiration monitor with global tags, When an artifact is monitored, then meter registry is called with proper values and global tags`() {
-        val globalTags = listOf(
-            ImmutableTag("additionalGlobalTag1Key", "additionalGlobalTag1Value"),
-            ImmutableTag("additionalGlobalTag2Key", "additionalGlobalTag2Value")
-        )
-        val monitorWithGlobalTags = ExpirationMonitor(clock, registry, globalTags)
-        val expiringArtifact = mockk<ExpiringArtifact>(relaxed = true)
-        every { expiringArtifact.name } returns artifactName
+        @Test
+        fun `Given artifact provider that throws exception, When artifact is safely received and monitored, then substitute of expiring artifact is monitored`() {
+            uut.receiveArtifactSafelyAndMonitor(artifactName) {throw ArtifactParsingException("TestException")}
 
-        monitorWithGlobalTags.monitorExpiringArtifact(expiringArtifact)
-
-        verify {
-            registry.gauge(
-                "artifact.expiration",
-                listOf(ImmutableTag("artifact.name", artifactName)) + globalTags,
-                expiringArtifact,
-                any()
-            )
+            verify {
+                registry.gauge<ExpiringArtifact>(
+                    "artifact.expiration",
+                    listOf(ImmutableTag("artifact.name", "Parsing Error: $artifactName")),
+                    any<NotParsableArtifact>(),
+                    any()
+                )
+            }
         }
-    }
 
-    @ParameterizedTest
-    @MethodSource("differenceToCurrentTimeToRemainingValidityInMs")
-    fun `Given expiring artifact, When artifact is monitored, then remaining validity has expected size`(
-        differenceToCurrentTime: Long,
-        expectedRemainingValidity: Long
-    ) {
-        val slot = slot<ToDoubleFunction<ExpiringArtifact>>()
-        val expiringArtifact = mockk<ExpiringArtifact>(relaxed = true)
-        every { expiringArtifact.name } returns artifactName
-        every { expiringArtifact.expirationDate } returns
-                Date.from(Instant.ofEpochMilli(fixedEpochMillis + differenceToCurrentTime))
-        every { registry.gauge("artifact.expiration", any(), expiringArtifact, capture(slot)) } returns
-                expiringArtifact
-
-        uut.monitorExpiringArtifact(expiringArtifact)
-
-        expectThat(slot.captured.applyAsDouble(expiringArtifact)).isEqualTo(expectedRemainingValidity.toDouble())
     }
 
     companion object {
-        @JvmStatic
+        @JvmStatic // used as method source
         fun differenceToCurrentTimeToRemainingValidityInMs(): Stream<Arguments?>? {
             return Stream.of(
                 arguments(Integer.MIN_VALUE, 0),

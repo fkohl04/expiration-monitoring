@@ -2,6 +2,7 @@ package com.example
 
 import ExpirationMonitor
 import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.metrics.micrometer.MicrometerMetrics
@@ -12,6 +13,7 @@ import io.micrometer.core.instrument.ImmutableTag
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import java.io.File
+import java.io.FileNotFoundException
 import java.time.Clock
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -37,10 +39,13 @@ fun Application.module() {
         }
     }
 
-    createAndMonitorExpiringArtifacts(appMicrometerRegistry)
+    createAndMonitorExpiringArtifacts(appMicrometerRegistry, environment)
 }
 
-private fun createAndMonitorExpiringArtifacts(prometheusMeterRegistry: PrometheusMeterRegistry) {
+private fun createAndMonitorExpiringArtifacts(
+    prometheusMeterRegistry: PrometheusMeterRegistry,
+    environment: ApplicationEnvironment
+) {
     val clock: Clock = Clock.systemUTC()
     val expirationMonitor = ExpirationMonitor(
         clock,
@@ -53,15 +58,20 @@ private fun createAndMonitorExpiringArtifacts(prometheusMeterRegistry: Prometheu
             ExpiringCredential(it, Date.from(Instant.now(clock).plus(5, ChronoUnit.DAYS)))
         }
     }
+    "AnotherExpiringCredential".let {
+        expirationMonitor.receiveArtifactSafelyAndMonitor(it) {
+            ExpiringCredential(it, Date.from(Instant.now(clock).plus(35, ChronoUnit.DAYS)))
+        }
+    }
     "SomeX509".let {
         expirationMonitor.receiveArtifactSafelyAndMonitor(it) {
-            ExpiringX509Certificate(it, File(ClassLoader.getSystemResource("x509Certificate.crt").file))
+            ExpiringX509Certificate(it, File(environment.config.property("expiration.monitoring.x509.location").getString()))
         }
     }
     "SomeP12".let {
         expirationMonitor.receiveArtifactsSafelyAndMonitor(it) {
             ExpiringPkcs12(
-                it, File(ClassLoader.getSystemResource("keystore.pfx").file), ""
+                it, File(environment.config.property("expiration.monitoring.pkcs12.location").getString()), ""
             ).expiringCertificates
         }
     }
@@ -88,6 +98,11 @@ private fun createAndMonitorExpiringArtifacts(prometheusMeterRegistry: Prometheu
             -----END CERTIFICATE-----
             """.trimIndent()
             )
+        }
+    }
+    "SomeCredentialThatCanNotBeParsed".let {
+        expirationMonitor.receiveArtifactSafelyAndMonitor(it) {
+            throw FileNotFoundException("This exception was thrown for testing purpose.")
         }
     }
 }
