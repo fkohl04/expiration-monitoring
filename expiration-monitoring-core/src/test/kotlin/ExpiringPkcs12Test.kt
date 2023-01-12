@@ -3,6 +3,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Path
 import java.security.KeyStore
+import java.security.cert.X509Certificate
 import java.time.Instant
 import model.ExpiringPkcs12
 import org.junit.jupiter.api.Test
@@ -27,18 +28,17 @@ internal class ExpiringPkcs12Test {
         certificateCount: Int,
         @TempDir tempDir: Path
     ) {
-        val ks = KeyStore.getInstance(KeyStore.getDefaultType())
-        ks.load(null, password.toCharArray())
-        (1..certificateCount).forEach {
-            ks.setCertificateEntry("$it", X509CertificateFactory.generateX509Certificate())
-        }
-        val path = File("$tempDir/keystore")
-        FileOutputStream(path).use { ks.store(it, password.toCharArray()) }
+        val pathToKeystore = createKeyStoreFileContainingCertificates(
+            (1..certificateCount).associate { "$it" to X509CertificateFactory.generateX509Certificate() },
+            tempDir
+        )
 
-        val uut = ExpiringPkcs12(keyStoreName, path, password)
+        val uut = ExpiringPkcs12(keyStoreName, pathToKeystore, password)
 
         expectThat(uut.expiringCertificates) hasSize certificateCount
     }
+
+
 
     @Test
     fun `Given keystore with 1 certificate, when keystore is created from file, Then name of certificate and expiry date is correct`(
@@ -47,13 +47,9 @@ internal class ExpiringPkcs12Test {
         val aliasName = "some alias name"
         val validUntil = Instant.ofEpochMilli(50000)
         val cert = X509CertificateFactory.generateX509Certificate(validUntil = validUntil)
-        val ks = KeyStore.getInstance(KeyStore.getDefaultType())
-        ks.load(null, password.toCharArray())
-        ks.setCertificateEntry(aliasName, cert)
-        val path = File("$tempDir/keystore")
-        FileOutputStream(path).use { ks.store(it, password.toCharArray()) }
+        val pathToKeystore = createKeyStoreFileContainingCertificates(mapOf(aliasName to cert), tempDir)
 
-        val uut = ExpiringPkcs12(keyStoreName, path, password)
+        val uut = ExpiringPkcs12(keyStoreName, pathToKeystore, password)
 
         expectThat(uut.expiringCertificates) hasSize 1
         expectThat(uut.expiringCertificates.first()).isNotNull() and {
@@ -72,6 +68,16 @@ internal class ExpiringPkcs12Test {
         expectThrows<ArtifactParsingException> {
             ExpiringPkcs12(keyStoreName, path, password)
         }
+    }
 
+    private fun createKeyStoreFileContainingCertificates(aliasToCertificates: Map<String, X509Certificate>, tempDir: Path): File {
+        val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+        keyStore.load(null, password.toCharArray())
+        aliasToCertificates.forEach {
+            keyStore.setCertificateEntry(it.key, it.value)
+        }
+        val path = File("$tempDir/keystore")
+        FileOutputStream(path).use { keyStore.store(it, password.toCharArray()) }
+        return path
     }
 }
