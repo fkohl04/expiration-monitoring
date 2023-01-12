@@ -38,8 +38,6 @@ internal class ExpiringPkcs12Test {
         expectThat(uut.expiringCertificates) hasSize certificateCount
     }
 
-
-
     @Test
     fun `Given keystore with 1 certificate, when keystore is created from file, Then name of certificate and expiry date is correct`(
         @TempDir tempDir: Path

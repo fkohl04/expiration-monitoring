@@ -1,4 +1,4 @@
-package expiration.monitoring.spring
+package expiration.monitoring.spring.configuration
 
 import io.micrometer.core.instrument.ImmutableTag
 import io.micrometer.core.instrument.Measurement
