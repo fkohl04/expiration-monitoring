@@ -1,8 +1,10 @@
+import exception.ArtifactParsingException
 import io.micrometer.core.instrument.ImmutableTag
 import io.micrometer.core.instrument.MeterRegistry
 import java.lang.Double.max
 import java.time.Clock
 import java.util.Date
+import kotlin.jvm.Throws
 import model.ExpiringArtifact
 import model.NotParsableArtifact
 import org.slf4j.LoggerFactory
@@ -19,6 +21,7 @@ class ExpirationMonitor(
      */
     private val monitoredArtifacts = mutableListOf<ExpiringArtifact>()
 
+    @Throws(ArtifactParsingException::class)
     fun monitorExpiringArtifact(expiringArtifact: ExpiringArtifact) {
         logger.info("Monitoring expiration date of ${expiringArtifact.name}")
 
@@ -32,6 +35,7 @@ class ExpirationMonitor(
         monitoredArtifacts.add(expiringArtifact)
     }
 
+    @Throws(ArtifactParsingException::class)
     fun monitorExpiringArtifacts(expiringArtifacts: Collection<ExpiringArtifact>) =
         expiringArtifacts.forEach { monitorExpiringArtifact(it) }
 

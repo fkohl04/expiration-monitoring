@@ -44,6 +44,25 @@ tag that needs to be set per service. Please see the sections of the modules to 
 
 ### Using expiration-monitoring-core
 
+The [ExpirationMonitor](expiration-monitoring-core/src/main/kotlin/ExpirationMonitor.kt) is the core of this module. It
+provides functionalities to monitor the remaining validity of objects that implement the
+interface [ExpiringArtifact](expiration-monitoring-core/src/main/kotlin/model/ExpiringArtifact.kt).
+An `ExpiringArtifact` symbolizes an artifact that has an expiring date.
+
+The public functions of the expiration monitor can be divided in two categories:
+
+1. `monitorExpiringArtifact` & `monitorExpiringArtifacts` should be used if you have already initialized the artifact
+   that shall be monitored. They take the artifact, monitor it and will take care that the object is not deleted by
+   garbage collection.
+2. `receiveArtifactSafelyAndMonitor` & `receiveArtifactsSafelyAndMonitor` should be used if you want to create artifacts
+   and then monitor them. These functions have to be called with a function that produces an expiring artifact. If the
+   producer function throws an
+   exception the artifact will still be added to the metrics, but will be marked as expired. To make this error visible
+   in Grafana and allow distinguishing to a normal expiration the artifact name will be prefixed with `Parsing Error:`.
+
+Please see the [models directory](expiration-monitoring-core/src/main/kotlin/model) for implementations of
+the `ExpiringArtifact` interface.
+
 ### Using expiration-monitoring-spring
 
 This module enables you to execute the monitoring functionalities of the core module only by setting spring application
@@ -57,7 +76,8 @@ properties. For an example usage see the [spring example application](example-ap
     class SpringExampleApplication
    ```
 3. Add configuration properties to your application to specify which artifacts shall be monitored. See the following
-   subsections for all possibilities.
+   subsections for explanations on the possible configuration values. For details see the
+   corresponding [properties file](expiration-monitoring-spring/src/main/kotlin/expiration/monitoring/spring/configuration/properties/ExpirationMonitoringProperties.kt)
 
 #### Additional metric tags
 
