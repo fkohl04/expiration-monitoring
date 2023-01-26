@@ -12,11 +12,11 @@ important. At the same time this expiration principle causes repeatedly problems
 - In 2020 an expired certificate
   at [Spotify](https://www.thesslstore.com/blog/the-day-the-music-died-certificate-expiration-takes-down-spotify/)
   resulted in the music streaming service to be down
-- Also, [Microsoft](https://www.theverge.com/2020/2/3/21120248/microsoft-teams-down-outage-certificate-issue-status) had
+- Also [Microsoft](https://www.theverge.com/2020/2/3/21120248/microsoft-teams-down-outage-certificate-issue-status) had
   problems with certificate expiration resulting in their service Microsoft Teams to be down
 - Even a part of the
-  German [payment sector](https://hackaday.com/2022/05/30/expired-certificate-causes-german-payment-meltdown/) disturbed
-  by an expired certificate
+  German [payment sector](https://hackaday.com/2022/05/30/expired-certificate-causes-german-payment-meltdown/) was
+  disturbed by an expired certificate
 
 ## What can we do to prevent the expiration of our certificates?
 
@@ -24,13 +24,13 @@ The best solution against the expiration is to have an automation that renews th
 there are multiple providers for automated certificate renewal. E.g. in a kubernetes cluster
 a [cert-manager](https://cert-manager.io/docs/) monitors and renews certificates.
 
-But of course real life projects are often far away from being ideal. It occurs in many companies that you have to deal 
-with certificates that can for various reasons not be automatically renewed. Just to give two examples that from 
+But of course real life projects are often far away from being ideal. It occurs in many companies that you have to deal
+with certificates that can for various reasons not be automatically renewed. Just to give two examples that from
 projects I have worked in:
 
 - A customer has regulatory reasons why he is not allowed to use automated certificate generation
 - You are writing an application that communicates with an external service from a different company. This company
-  insists that your application is sending a client certificate signed by them (which of course is not happing in an 
+  insists that your application is sending a client certificate signed by them (which of course is not happing in an
   automated way).
 
 If we cannot renew our certificates automatically, we have to do it manually. Therefore, we need to keep track of the
@@ -41,9 +41,9 @@ date when the certificate expires to exchange it in time.
 Here are some examples of certificate expiration monitoring solutions I have come across so far, and why they are no
 long term solution
 
-- A confluence page keeping track of all used certificates
+- A page in the service documentation that keeps track of all used certificates
 
-  This approach is very error-prone, because people forget to look at the page and don't see the expiration data at all
+  This approach is very error-prone, because people forget to look at the page and don't see the expiration data at all.
   On top of that you can never be sure, that the content of the page is really true. People forget to update the page
   after adding a new certificate or even update the page, but do a mistake by updating the certificate in the service.
 
@@ -57,15 +57,17 @@ long term solution
 
   This is a more advanced solution, which still comes with some pitfalls. Such a system will probably notify
   about a certificate that is about to expire. Then the certificate will be renewed inside the management system and be
-  forwarded to a service using it. But one can never be sure, that a certificate really has been updated in all services. 
-  Also people may update the certificate in the management system, but forget to update the services at all. In both 
-  cases the management system will display the certificate as renewed, even the certificate used in the service is about 
+  forwarded to a service using it. But one can never be sure, that a certificate really has been updated in all
+  services.
+  Also people may update the certificate in the management system, but forget to update the services at all. In both
+  cases the management system will display the certificate as renewed, even the certificate used in the service is about
   to expire.
 
 ## A service level based approach
 
 All the bad examples above have one thing in common: They are not monitoring the certificate that is actually used, but
-a local representation of it. And as we have seen there is no guarantee that a local representation of a certificate really
+a local representation of it. And as we have seen there is no guarantee that a local representation of a certificate
+really
 corresponds to the certificate that is used by a running service. A solution that is much more resilient against human
 errors has to be based on the following
 
