@@ -13,11 +13,11 @@ This can be achieved with the following commands:
 docker-compose -f example-applications/docker-compose.yml up
 ```
 
-After executing the docker-compose command 4 Containers should be running:
+After executing the docker-compose command four containers should be running:
 
 1. A ktor example application which uses the module [expiration-monitoring-core](expiration-monitoring-core)
 2. A spring example application which uses the module [expiration-monitoring-spring](expiration-monitoring-spring)
-3. A Prometheus that monitors the two example applications
+3. A Prometheus container that monitors the two example applications
 4. Grafana container that displays the metrics, collected by the Prometheus container
 
 Open the locally started [Grafana instance](http://localhost:3000), login with the credentials `admin:admin` and you
