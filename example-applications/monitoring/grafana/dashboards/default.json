@@ -99,7 +99,7 @@
           "refId": "A"
         }
       ],
-      "title": "Artifact expiration $service",
+      "title": "$service",
       "transparent": true,
       "type": "gauge"
     }
