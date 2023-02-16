@@ -60,8 +60,8 @@ long term solution
   forwarded to a service using it. But one can never be sure, that a certificate really has been updated in all
   services.
   Also people may update the certificate in the management system, but forget to update the services at all. In both
-  cases the management system will display the certificate as renewed, even the certificate used in the service is about
-  to expire.
+  cases the management system will display the certificate as renewed, even though the certificate used in the service 
+  is about to expire.
 
 ## A service level based approach
 
@@ -92,3 +92,12 @@ via Micrometer in the service metrics. These can then be picked up by Prometheus
 
 Once exposed, It is easily possible to implement alerting in Prometheus or Grafana based on these metrics. Having the
 metrics displayed in Grafana makes the expiration as visible as possible to the whole team.
+
+## Conclusion
+
+We have seen why certificate expiration and its monitoring is important and furthermore that it is dangerous if this 
+monitoring is based on human surveillance. 
+
+How does your certificate monitoring setup look like and did you have downtimes because of expired certificates before?
+If yes, you may want to reevaluate your setup and investigate if you are really monitoring the instance of the 
+certificate that is used by your service and no local representation of it.
