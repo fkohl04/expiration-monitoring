@@ -9,8 +9,8 @@ plugins {
     `maven-publish`
 }
 
-group = "fkohl04.expiration-monitoring"
-version = "0.0.1-SNAPSHOT"
+group = "io.github.fkohl04"
+version = project.version
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
@@ -41,4 +41,14 @@ tasks.withType<Test> {
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
     enabled = false
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "expiration-monitoring-spring"
+
+            from(components["java"])
+        }
+    }
 }

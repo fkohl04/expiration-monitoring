@@ -4,8 +4,8 @@ plugins {
     `maven-publish`
 }
 
-group = "fkohl04.expiration.monitoring"
-version = "1.0-SNAPSHOT"
+group = "io.github.fkohl04"
+version = project.version
 
 repositories {
     mavenCentral()
@@ -37,5 +37,15 @@ tasks {
 
     compileTestKotlin {
         kotlinOptions.jvmTarget = "17"
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "expiration-monitoring-core"
+
+            from(components["java"])
+        }
     }
 }
