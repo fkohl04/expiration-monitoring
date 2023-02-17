@@ -11,6 +11,9 @@ plugins {
 
 group = "io.github.fkohl04"
 version = project.version
+description = ""
+
+
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {

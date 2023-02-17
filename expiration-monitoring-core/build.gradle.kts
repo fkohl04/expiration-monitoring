@@ -6,6 +6,7 @@ plugins {
 
 group = "io.github.fkohl04"
 version = project.version
+description = ""
 
 repositories {
     mavenCentral()
@@ -46,6 +47,27 @@ publishing {
             artifactId = "expiration-monitoring-core"
 
             from(components["java"])
+
+            pom {
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("fkohl04")
+                        name.set("Fabian Kohlmann")
+                        email.set("todo")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/simpligility/ossrh-demo.git")
+                    developerConnection.set("scm:git:ssh://github.com:simpligility/ossrh-demo.git")
+                    url.set("http://github.com/simpligility/ossrh-demo/tree/master")
+                }
+            }
         }
     }
 }
