@@ -7,12 +7,18 @@ plugins {
     kotlin("plugin.spring") version "1.7.21"
     `java-library`
     `maven-publish`
+    signing
 }
 
 group = "io.github.fkohl04"
 version = project.version
-description = ""
+description = "Monitoring of artifacts that are able to expire in a Spring service using Micrometer."
 
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
 
 java.sourceCompatibility = JavaVersion.VERSION_17
 
@@ -46,12 +52,8 @@ tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
     enabled = false
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "expiration-monitoring-spring"
+apply("../publishing.gradle.kts")
 
-            from(components["java"])
-        }
-    }
+signing {
+    sign(publishing.publications["maven"])
 }

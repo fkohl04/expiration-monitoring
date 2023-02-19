@@ -2,20 +2,25 @@ plugins {
     kotlin("jvm") version "1.8.0"
     `java-library`
     `maven-publish`
+    signing
 }
 
 group = "io.github.fkohl04"
 version = project.version
-description = ""
+description = "Monitoring of artifacts that are able to expire in a JVM service using Micrometer."
 
 repositories {
     mavenCentral()
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 dependencies {
     implementation("org.slf4j:slf4j-api:2.0.0")
     implementation("io.micrometer:micrometer-registry-prometheus:1.9.5")
-    implementation(kotlin("stdlib-jdk8"))
 
     testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("io.strikt:strikt-core:0.34.0")
@@ -41,33 +46,8 @@ tasks {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "expiration-monitoring-core"
+apply("../publishing.gradle.kts")
 
-            from(components["java"])
-
-            pom {
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("fkohl04")
-                        name.set("Fabian Kohlmann")
-                        email.set("todo")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/simpligility/ossrh-demo.git")
-                    developerConnection.set("scm:git:ssh://github.com:simpligility/ossrh-demo.git")
-                    url.set("http://github.com/simpligility/ossrh-demo/tree/master")
-                }
-            }
-        }
-    }
+signing {
+    sign(publishing.publications["maven"])
 }

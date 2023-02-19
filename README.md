@@ -2,6 +2,9 @@
 
 Monitoring of artifacts that are able to expire in a JVM service using Micrometer.
 
+In [Motivation.md](./Motivation.md) you can read about the reasons why this library was implemented and what it can help
+you with.
+
 ## Quickstart
 
 The fastest way to test the functionality of this repository is to build the
