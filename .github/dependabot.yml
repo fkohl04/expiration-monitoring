@@ -8,6 +8,22 @@ updates:
     directory: "/expiration-monitoring-spring" 
     schedule:
       interval: "weekly"
+  - package-ecosystem: "gradle"
+    directory: "/example-applications/ktor-example"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/example-applications/ktor-example"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "gradle"
+    directory: "/example-applications/spring-example"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/example-applications/spring-example"
+    schedule:
+      interval: "weekly"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
