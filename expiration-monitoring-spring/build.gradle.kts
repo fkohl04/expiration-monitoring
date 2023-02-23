@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Base64
 
 plugins {
     id("org.springframework.boot") version "3.0.3"
@@ -54,6 +55,15 @@ tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
 
 apply("../publishing.gradle.kts")
 
+fun base64Decode(prop: String): String? {
+    return project.findProperty(prop)?.let {
+        String(Base64.getDecoder().decode(it.toString())).trim()
+    }
+}
+
 signing {
+    val signingKey = base64Decode("signingKey")
+    val signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword as String?)
     sign(publishing.publications["maven"])
 }

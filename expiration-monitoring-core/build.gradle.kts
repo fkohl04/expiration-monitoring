@@ -1,3 +1,5 @@
+import java.util.Base64
+
 plugins {
     kotlin("jvm") version "1.8.10"
     `java-library`
@@ -48,6 +50,15 @@ tasks {
 
 apply("../publishing.gradle.kts")
 
+fun base64Decode(prop: String): String? {
+    return project.findProperty(prop)?.let {
+        String(Base64.getDecoder().decode(it.toString())).trim()
+    }
+}
+
 signing {
+    val signingKey = base64Decode("signingKey")
+    val signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword as String?)
     sign(publishing.publications["maven"])
 }
