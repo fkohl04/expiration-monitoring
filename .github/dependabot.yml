@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle" 
+    directory: "/expiration-monitoring-core" 
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "gradle" 
+    directory: "/expiration-monitoring-spring" 
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
