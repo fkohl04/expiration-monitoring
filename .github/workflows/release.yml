@@ -19,7 +19,7 @@ env:
   ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
 
 jobs:
-  build:
+  release:
 
     runs-on: ubuntu-latest
 
@@ -33,6 +33,10 @@ jobs:
     - name: Gradle Build
       uses: gradle/gradle-build-action@6095a76664413da4c8c134ee32e8a8ae900f0f1f
       with:
-        arguments: build
+        arguments: build --info
     - name: Gradle Publish
       run: ./gradlew publishMavenPublicationToSonaTypeRepository
+    - uses: actions/upload-artifact@v3
+      with:
+        name: release ${{ github.event.inputs.version }}
+        path: expiration-monitoring-*/build/libs/
