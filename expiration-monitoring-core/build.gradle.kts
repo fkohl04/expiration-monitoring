@@ -19,7 +19,7 @@ java {
 }
 
 dependencies {
-    implementation("org.slf4j:slf4j-api:2.0.0")
+    implementation("org.slf4j:slf4j-api:2.0.6")
     implementation("io.micrometer:micrometer-registry-prometheus:1.9.5")
 
     testImplementation("io.mockk:mockk:1.12.4")
