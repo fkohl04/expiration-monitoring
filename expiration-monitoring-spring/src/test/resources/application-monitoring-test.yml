@@ -1,0 +1,41 @@
+# These properties are used in CertificateValidityMonitoringConfigurationTest
+
+expiration.monitoring:
+  globalTags:
+    - key: "service"
+      value: "test-service"
+  credentials:
+    - name: "test credential"
+      expirationDate: "Sat, 12 Aug 1995 13:30:00 GMT"
+  x509Certificates:
+    - name: "test X509 certificate"
+      location: "classpath:x509Certificate.crt"
+    - name: "Not parsable X509 certificate"
+      location: "classpath:application-monitoring-test.yml" # Choosing on purpose a not parsable file
+  pkcs12Stores:
+    - name: "test p12 keystore"
+      location: "classpath:keystore.pfx"
+    - name: "Not parsable p12 keystore"
+      location: "classpath:application-monitoring-test.yml" # Choosing on purpose a not parsable file
+  plaintextX509Certificates:
+    - name: "test plaintext X509 certificate"
+      content: |
+        -----BEGIN CERTIFICATE-----
+        MIICljCCAX4CCQDERzAAFiDvTzANBgkqhkiG9w0BAQsFADANMQswCQYDVQQGEwJE
+        RTAeFw0yMjEyMTUxMzQyNDVaFw0yMzEyMTUxMzQyNDVaMA0xCzAJBgNVBAYTAkRF
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWiHLT8USaHdixSoZEU7
+        pOZdOU96a1GAkCbgVC600T/KTqJC6TIPqe9VejFHBlmBuF4BMVczmOHPD0K7lWdU
+        ZzJOGAxgtplNVgUZLLIv6KSMYuMg6yWY0aAHmwKJm3OfuEmygco3zgcKGqnzsttz
+        Ttw2cyO5asgNQfP0J/xPDVxEjnLLoj67HrqH/4wDT7dLgG7ar8BeshcUIRVDld8q
+        s8mTcTR8Ax5w8R7FTUBuJvuomtC4DHseUMRbLCIVAe1gK7kirDWWBtXAvY3wefqA
+        qwYuw6ufyy1U5KL+5OiHY0Ddrk2MU3jSSM0X/AFJIKb34UpTyDkC02w0y9UDSd6D
+        +wIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQABDGAeCnLosYBcBsO8bDLum437xbgK
+        xYmpBxGI59lJt6wz6bXM4pJ45OJM1MEgQmrUyRBRJMLHro7fkWr3e6y2cRVvlZIq
+        TpbrPp4hJMFz2nHOCXctqcCVTJlyprr6mrNpf/27DdlO349CDa1asumFCjuoZTCT
+        S9b2PfdZDjvdTiMaFwJaAe5rtDcdU79gLTG5i5MzuqvXP063lPoeY/HCB3V5vrd9
+        8pnO+DFKboH4L9yfsrpX5ZweC06hvCm3qOGp2wW7mXrTfSeCUOCJRUIDLNBAp0+2
+        pSlM6plWfqPtMOhtn0e9/heckN6LjrHUSpEKIrEPvzcKrk4X1j6zD8lX
+        -----END CERTIFICATE-----
+    - name: "Not parsable plaintext X509 certificate"
+      content: |
+        This is not a parsable x509 certificate

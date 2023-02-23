@@ -1,0 +1,30 @@
+version: '2'
+services:
+  prometheus:
+    image: prom/prometheus:v2.29.1
+    container_name: prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana:7.5.10
+    container_name: grafana
+    volumes:
+      - ./monitoring/grafana/provisioning/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./monitoring/grafana/provisioning/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+  ktor-example:
+    build: ktor-example
+    container_name: ktor-example
+    ports:
+      - "8081:8080"
+  spring-example:
+    build: spring-example
+    container_name: spring-example
+    ports:
+      - "8082:8080"
