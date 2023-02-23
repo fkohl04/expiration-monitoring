@@ -24,7 +24,7 @@ dependencies {
 
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("io.strikt:strikt-core:0.34.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
     // cryptography
     testImplementation("org.bouncycastle:bcprov-jdk15on:1.70")
