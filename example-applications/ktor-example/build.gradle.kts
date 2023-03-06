@@ -5,7 +5,7 @@ val logbackVersion="1.4.5"
 
 plugins {
     kotlin("jvm") version "1.8.10"
-    id("io.ktor.plugin") version "2.2.3"
+    id("io.ktor.plugin") version "2.2.4"
 }
 
 group = "fkohl04.expiration.monitoring"
