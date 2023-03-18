@@ -1,13 +1,16 @@
 # Monitoring of certificate expirations
 
+(Hier ein Einleitungssatz, der den User direkt catcht? Vorschlag: "In modern IT systems, expired Certificates continue to be a cause for major outages. In this article, I will present a simply solution to properly handle the problem on a service level using proven monitoring / alerting tools.")
+
+
 ## Why do we need expiring certificates and why do we need to monitor them?
 
 Transport layer security (TLS) - which is the basis for HTTPS - is probably the most prominent representation for
-certificate based encryption. Encryption on application level is just a further example of its use cases. An important
-part of the security mechanism of certificate based encryption is that the certificates have an expiration date and are
-considered as invalid after that date.
+certificate based encryption. Encryption on application level is just another example of its use cases. An important
+feature of the security mechanism of certificate based encryption is that the certificates have an expiration date and are
+considered as invalid after that. Therefore, they need to be renewed before expiry.
 Read [here](https://www.entrust.com/blog/2016/10/why-is-certificate-expiration-necessary/) why the expiration is
-important. At the same time this expiration principle causes repeatedly problems in computer system all over the world:
+important. At the same time, the principle of expiration repeatedly causes problems in computer systems all over the world:
 
 - In 2020 an expired certificate
   at [Spotify](https://www.thesslstore.com/blog/the-day-the-music-died-certificate-expiration-takes-down-spotify/)
@@ -20,7 +23,7 @@ important. At the same time this expiration principle causes repeatedly problems
 
 ## What can we do to prevent the expiration of our certificates?
 
-The best solution against the expiration is to have an automation that renews the certificates on its own. And indeed
+The best solution to prevent outages from certificate expiry is to have an automation that renews the certificates on its own. And indeed
 there are multiple providers for automated certificate renewal. E.g. in a kubernetes cluster
 a [cert-manager](https://cert-manager.io/docs/) monitors and renews certificates.
 
@@ -44,7 +47,7 @@ long term solution
 - A page in the service documentation that keeps track of all used certificates
 
   This approach is very error-prone, because people forget to look at the page and don't see the expiration data at all.
-  On top of that you can never be sure, that the content of the page is really true. People forget to update the page
+  On top of that, you can never be sure, that the content of the page is really true. People forget to update the page
   after adding a new certificate or even update the page, but do a mistake by updating the certificate in the service.
 
 - Reminders in a calendar or a ticket system
@@ -76,8 +79,8 @@ The only instance that should give information about the validity of a certifica
 
 And implementing a solution based on this thought is not a big deal. If a service depends on a certificate, it has to
 have
-access to it in some way and therefore can also access its expiration date. The continuous monitoring of applications
-should be implemented in every company. Combining this, we can make our application communicate to the monitoring
+access to it in some way and therefore can also access its expiration date. A continuous monitoring of applications
+should be implemented in every enterprise-grade software (Gibt es hierfür noch eine Referenz o.ä.?). Combining this, we can make our application communicate to the monitoring
 tools which certificates it is using and when these will expire.
 
 ## Example for JVM services using Micrometer, Prometheus and Grafana
