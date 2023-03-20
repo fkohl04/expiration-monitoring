@@ -1,6 +1,6 @@
 val ktorVersion="2.2.4"
 val kotlinVersion="1.8.10"
-val prometheusVersion="1.10.4"
+val prometheusVersion="1.10.5"
 val logbackVersion="1.4.6"
 
 plugins {
