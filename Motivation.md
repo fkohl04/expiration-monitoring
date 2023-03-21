@@ -1,16 +1,17 @@
 # Monitoring of certificate expirations
 
-(Hier ein Einleitungssatz, der den User direkt catcht? Vorschlag: "In modern IT systems, expired Certificates continue to be a cause for major outages. In this article, I will present a simply solution to properly handle the problem on a service level using proven monitoring / alerting tools.")
-
+In modern IT systems expired certificates continue to be a cause for major outages. In this article, I will present a
+simple solution to properly handle the problem on a service level using proven monitoring and alerting tools.
 
 ## Why do we need expiring certificates and why do we need to monitor them?
 
 Transport layer security (TLS) - which is the basis for HTTPS - is probably the most prominent representation for
 certificate based encryption. Encryption on application level is just another example of its use cases. An important
-feature of the security mechanism of certificate based encryption is that the certificates have an expiration date and are
-considered as invalid after that. Therefore, they need to be renewed before expiry.
+feature of the security mechanism of certificate based encryption is that the certificates have an expiration date and
+are considered as invalid after that. Therefore, they need to be renewed before expiry.
 Read [here](https://www.entrust.com/blog/2016/10/why-is-certificate-expiration-necessary/) why the expiration is
-important. At the same time, the principle of expiration repeatedly causes problems in computer systems all over the world:
+important. At the same time, the principle of expiration repeatedly causes problems in computer systems all over the
+world:
 
 - In 2020 an expired certificate
   at [Spotify](https://www.thesslstore.com/blog/the-day-the-music-died-certificate-expiration-takes-down-spotify/)
@@ -23,8 +24,8 @@ important. At the same time, the principle of expiration repeatedly causes probl
 
 ## What can we do to prevent the expiration of our certificates?
 
-The best solution to prevent outages from certificate expiry is to have an automation that renews the certificates on its own. And indeed
-there are multiple providers for automated certificate renewal. E.g. in a kubernetes cluster
+The best solution to prevent outages from certificate expiry is to have an automation that renews the certificates on
+its own. And indeed there are multiple providers for automated certificate renewal. E.g. in a kubernetes cluster
 a [cert-manager](https://cert-manager.io/docs/) monitors and renews certificates.
 
 But of course real life projects are often far away from being ideal. It occurs in many companies that you have to deal
@@ -33,7 +34,7 @@ projects I have worked in:
 
 - A customer has regulatory reasons why he is not allowed to use automated certificate generation
 - You are writing an application that communicates with an external service from a different company. This company
-  insists that your application is sending a client certificate signed by them (which of course is not happing in an
+  insists that your application is sending a client certificate signed by them (which of course is not happening in an
   automated way).
 
 If we cannot renew our certificates automatically, we have to do it manually. Therefore, we need to keep track of the
@@ -63,25 +64,24 @@ long term solution
   forwarded to a service using it. But one can never be sure, that a certificate really has been updated in all
   services.
   Also people may update the certificate in the management system, but forget to update the services at all. In both
-  cases the management system will display the certificate as renewed, even though the certificate used in the service 
+  cases the management system will display the certificate as renewed, even though the certificate used in the service
   is about to expire.
 
 ## A service level based approach
 
 All the bad examples above have one thing in common: They are not monitoring the certificate that is actually used, but
 a local representation of it. And as we have seen there is no guarantee that a local representation of a certificate
-really
-corresponds to the certificate that is used by a running service. A solution that is much more resilient against human
-errors has to be based on the following
+really corresponds to the certificate that is used by a running service. A solution that is much more resilient against 
+human errors has to be based on the following
 
 **<p align="center">
 The only instance that should give information about the validity of a certificate is the service using it.</p>**
 
 And implementing a solution based on this thought is not a big deal. If a service depends on a certificate, it has to
-have
-access to it in some way and therefore can also access its expiration date. A continuous monitoring of applications
-should be implemented in every enterprise-grade software (Gibt es hierfür noch eine Referenz o.ä.?). Combining this, we can make our application communicate to the monitoring
-tools which certificates it is using and when these will expire.
+have access to it in some way and therefore can also access its expiration date. A continuous monitoring of applications
+[should be implemented in every enterprise-grade software](https://medium.com/@rpatl/what-is-application-performance-monitoring-4ea015343d2).
+Combining this, we can make our application communicate to the monitoring tools which certificates it is using and when 
+these will expire.
 
 ## Example for JVM services using Micrometer, Prometheus and Grafana
 
@@ -98,9 +98,9 @@ metrics displayed in Grafana makes the expiration as visible as possible to the 
 
 ## Conclusion
 
-We have seen why certificate expiration and its monitoring is important and furthermore that it is dangerous if this 
-monitoring is based on human surveillance. 
+We have seen why certificate expiration and its monitoring is important and furthermore that it is dangerous if this
+monitoring is based on human surveillance.
 
 How does your certificate monitoring setup look like and did you have downtimes because of expired certificates before?
-If yes, you may want to reevaluate your setup and investigate if you are really monitoring the instance of the 
+If yes, you may want to reevaluate your setup and investigate if you are really monitoring the instance of the
 certificate that is used by your service and no local representation of it.
