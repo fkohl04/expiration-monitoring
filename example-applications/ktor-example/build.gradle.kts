@@ -1,4 +1,4 @@
-val ktorVersion="2.2.4"
+val ktorVersion="2.3.0"
 val kotlinVersion="1.8.20"
 val prometheusVersion="1.10.6"
 val logbackVersion="1.4.6"
