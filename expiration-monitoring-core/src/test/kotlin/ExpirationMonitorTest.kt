@@ -105,8 +105,10 @@ internal class ExpirationMonitorTest {
             every { expiringArtifact.name } returns artifactName
             every { expiringArtifact.expirationDate } returns
                     Date.from(Instant.ofEpochMilli(fixedEpochMillis + differenceToCurrentTime))
-            every { registry.gauge("artifact.expiration", any(), expiringArtifact, capture(slot)) } returns
-                    expiringArtifact
+            every {
+                hint(ExpiringArtifact::class)
+                registry.gauge("artifact.expiration", any(), expiringArtifact, capture(slot))
+            } returns expiringArtifact
 
             uut.monitorExpiringArtifact(expiringArtifact)
 

@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Base64
 
 plugins {
-    id("org.springframework.boot") version "3.0.6"
-    id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.20"
+    id("org.springframework.boot") version "3.1.2"
+    id("io.spring.dependency-management") version "1.1.2"
+    kotlin("jvm") version "1.9.0"
     kotlin("plugin.spring") version "1.9.0"
     `java-library`
     `maven-publish`
