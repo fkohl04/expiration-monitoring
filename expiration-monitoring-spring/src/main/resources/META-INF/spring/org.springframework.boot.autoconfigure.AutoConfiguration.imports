@@ -1,0 +1,2 @@
+expiration.monitoring.spring.configuration.CertificateValidityMonitoringConfiguration
+expiration.monitoring.spring.configuration.properties.ExpirationMonitoringProperties

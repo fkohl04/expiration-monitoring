@@ -1,4 +1,4 @@
-package expiration.monitoring.spring.configuration
+package expiration.monitoring.example.spring.configuration
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

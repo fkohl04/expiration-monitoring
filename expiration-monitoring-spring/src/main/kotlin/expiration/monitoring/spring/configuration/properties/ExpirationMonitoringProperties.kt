@@ -6,31 +6,31 @@ import java.io.File
 import java.util.Date
 
 @ConfigurationProperties(value = "expiration.monitoring")
-class ExpirationMonitoringProperties(
-    val globalTags: List<ImmutableTag>?,
-    val credentials: List<ExpiringCredentialProperties>?,
-    val pkcs12Stores: List<ExpiringPkcs12Properties>?,
-    val x509Certificates: List<ExpiringX509CertificateProperties>?,
-    val plaintextX509Certificates: List<ExpiringPlaintextX509CertificateProperties>?,
+data class ExpirationMonitoringProperties(
+    var globalTags: List<ImmutableTag>?,
+    var credentials: List<ExpiringCredentialProperties>?,
+    var pkcs12Stores: List<ExpiringPkcs12Properties>?,
+    var x509Certificates: List<ExpiringX509CertificateProperties>?,
+    var plaintextX509Certificates: List<ExpiringPlaintextX509CertificateProperties>?,
 )
 
-class ExpiringPkcs12Properties(
+data class ExpiringPkcs12Properties(
     val name: String,
     val location: File,
     val password: String = ""
 )
 
-class ExpiringX509CertificateProperties(
+data class ExpiringX509CertificateProperties(
     val name: String,
     val location: File
 )
 
-class ExpiringPlaintextX509CertificateProperties(
+data class ExpiringPlaintextX509CertificateProperties(
     val name: String,
     val content: String
 )
 
-class ExpiringCredentialProperties(
+data class ExpiringCredentialProperties(
     val name: String,
     val expirationDate: Date
 )

@@ -72,7 +72,11 @@ This module enables you to execute the monitoring functionalities of the core mo
 properties. For an example usage see the [spring example application](example-applications/spring-example).
 
 1. Add the dependency `implementation(project(":expiration-monitoring-spring"))`
-2. Configure your application to scan the packages of this dependency for spring configurations and components
+2. If you have configured Spring to use AutoConfigurations all necessary classes are injected automatically, and you can
+   skip this step.
+
+   If it is disabled configure your application to scan the packages of this dependency for spring configurations and
+   components
     ```kotlin
     @ConfigurationPropertiesScan("expiration.monitoring.spring.configuration")
     @ComponentScan("expiration.monitoring.spring.configuration")
