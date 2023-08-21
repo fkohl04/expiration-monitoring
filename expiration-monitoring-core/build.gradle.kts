@@ -22,11 +22,11 @@ java {
 
 dependencies {
     implementation("org.slf4j:slf4j-api:2.0.7")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.10.6")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.11.3")
 
-    testImplementation("io.mockk:mockk:1.13.5")
-    testImplementation("io.strikt:strikt-core:0.34.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testImplementation("io.mockk:mockk:1.13.7")
+    testImplementation("io.strikt:strikt-core:0.34.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
     // cryptography
     testImplementation("org.bouncycastle:bcprov-jdk15on:1.70")
