@@ -14,7 +14,6 @@ import strikt.api.expectThat
 import strikt.api.expectThrows
 import strikt.assertions.hasSize
 import strikt.assertions.isEqualTo
-import strikt.assertions.isNotNull
 import utils.X509CertificateFactory
 
 internal class ExpiringPkcs12Test {
@@ -50,7 +49,7 @@ internal class ExpiringPkcs12Test {
         val uut = ExpiringPkcs12(keyStoreName, pathToKeystore, password)
 
         expectThat(uut.expiringCertificates) hasSize 1
-        expectThat(uut.expiringCertificates.first()).isNotNull() and {
+        expectThat(uut.expiringCertificates.first()) {
             get { subject.name } isEqualTo "$keyStoreName-$aliasName"
             get { subject.expirationDate!!.toInstant() } isEqualTo validUntil
         }
