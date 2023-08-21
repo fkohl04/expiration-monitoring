@@ -28,3 +28,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+groups:
+  non-major:
+    update-types:
+      - "minor"
+      - "patch"
+  major:
+    update-types:
+      - "major"
