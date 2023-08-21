@@ -3,7 +3,7 @@ import java.util.Base64
 
 plugins {
     id("org.springframework.boot") version "3.1.2"
-    id("io.spring.dependency-management") version "1.1.2"
+    id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.9.0"
     kotlin("plugin.spring") version "1.9.0"
     `java-library`
@@ -34,7 +34,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.micrometer:micrometer-registry-prometheus")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("io.mockk:mockk:1.13.7")
     testImplementation("io.strikt:strikt-core:0.34.1")
 }
 
