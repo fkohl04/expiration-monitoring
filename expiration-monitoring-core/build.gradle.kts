@@ -1,7 +1,7 @@
 import java.util.Base64
 
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "1.9.10"
     `java-library`
     `maven-publish`
     signing
