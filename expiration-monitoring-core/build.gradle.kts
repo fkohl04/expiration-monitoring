@@ -1,7 +1,7 @@
 import java.util.Base64
 
 plugins {
-    kotlin("jvm") version "1.9.10"
+    kotlin("jvm") version "1.9.20"
     `java-library`
     `maven-publish`
     signing
@@ -22,16 +22,16 @@ java {
 
 dependencies {
     implementation("org.slf4j:slf4j-api:2.0.9")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.11.4")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.11.5")
 
     testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("io.strikt:strikt-core:0.34.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.1")
     // cryptography
     testImplementation("org.bouncycastle:bcprov-jdk15on:1.70")
     testImplementation("org.bouncycastle:bcpkix-jdk15on:1.70")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
 }
 
 tasks.getByName<Test>("test") {
