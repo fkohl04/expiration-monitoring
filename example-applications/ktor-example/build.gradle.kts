@@ -4,7 +4,7 @@ val prometheusVersion="1.11.5"
 val logbackVersion="1.4.11"
 
 plugins {
-    kotlin("jvm") version "1.9.20"
+    kotlin("jvm") version "1.9.21"
     id("io.ktor.plugin") version "2.3.5"
 }
 
