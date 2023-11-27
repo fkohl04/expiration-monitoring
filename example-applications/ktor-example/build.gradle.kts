@@ -1,5 +1,5 @@
 val ktorVersion="2.3.5"
-val kotlinVersion="1.9.20"
+val kotlinVersion="1.9.21"
 val prometheusVersion="1.11.5"
 val logbackVersion="1.4.11"
 
