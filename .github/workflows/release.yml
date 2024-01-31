@@ -31,7 +31,7 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
     - name: Gradle Build
-      uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a
+      uses: gradle/gradle-build-action@a8f75513eafdebd8141bd1cd4e30fcd194af8dfa
       with:
         arguments: build --info
     - name: Gradle Publish
