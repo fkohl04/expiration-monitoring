@@ -26,12 +26,12 @@ dependencies {
 
     testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("io.strikt:strikt-core:0.34.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
     // cryptography
     testImplementation("org.bouncycastle:bcprov-jdk15on:1.70")
     testImplementation("org.bouncycastle:bcpkix-jdk15on:1.70")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
 }
 
 tasks.getByName<Test>("test") {
