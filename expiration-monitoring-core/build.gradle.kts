@@ -21,17 +21,17 @@ java {
 }
 
 dependencies {
-    implementation("org.slf4j:slf4j-api:2.0.11")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.12.2")
+    implementation("org.slf4j:slf4j-api:2.0.12")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.12.3")
 
-    testImplementation("io.mockk:mockk:1.13.9")
+    testImplementation("io.mockk:mockk:1.13.10")
     testImplementation("io.strikt:strikt-core:0.34.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
     // cryptography
     testImplementation("org.bouncycastle:bcprov-jdk15on:1.70")
     testImplementation("org.bouncycastle:bcpkix-jdk15on:1.70")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
 }
 
 tasks.getByName<Test>("test") {
