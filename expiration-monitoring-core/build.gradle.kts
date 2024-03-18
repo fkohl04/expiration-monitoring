@@ -1,7 +1,7 @@
 import java.util.Base64
 
 plugins {
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "1.9.23"
     `java-library`
     `maven-publish`
     signing
@@ -22,7 +22,7 @@ java {
 
 dependencies {
     implementation("org.slf4j:slf4j-api:2.0.12")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.12.3")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.12.4")
 
     testImplementation("io.mockk:mockk:1.13.10")
     testImplementation("io.strikt:strikt-core:0.34.1")
