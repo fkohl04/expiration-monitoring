@@ -1,11 +1,11 @@
-val ktorVersion="2.3.5"
-val kotlinVersion="1.9.20"
-val prometheusVersion="1.11.5"
-val logbackVersion="1.4.11"
+val ktorVersion="2.3.11"
+val kotlinVersion="1.9.24"
+val prometheusVersion="1.13.0"
+val logbackVersion="1.5.6"
 
 plugins {
-    kotlin("jvm") version "1.9.20"
-    id("io.ktor.plugin") version "2.3.5"
+    kotlin("jvm") version "1.9.24"
+    id("io.ktor.plugin") version "2.3.11"
 }
 
 group = "fkohl04.expiration.monitoring"
