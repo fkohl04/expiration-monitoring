@@ -39,7 +39,7 @@ jobs:
         distribution: 'zulu'
 
     - name: Gradle Build
-      uses: gradle/gradle-build-action@29c0906b64b8fc82467890bfb7a0a7ef34bda89e
+      uses: gradle/gradle-build-action@04b20c065cf1ab708c96e64a8811018d0a1fbc88
       with:
         arguments: build
 
